@@ -32,6 +32,7 @@ async function run() {
     // Get the database and collection on which to run the operation
     const database = client.db('jobsPortalDB2');
     const jobsCollection = database.collection('jobsColl');
+    const applicationsCollection = database.collection('appsColl');
     //=====================================================
 
     //all jobs read opreation
@@ -45,6 +46,13 @@ async function run() {
     app.get('/jobs/:id', async (req, res) => {
       const query = { _id: new ObjectId(req.params.id) };
       const result = await jobsCollection.findOne(query);
+      res.send(result);
+    });
+
+    //one application create opreation
+    app.post('/applications', async (req, res) => {
+      const doc = req.body;
+      const result = await applicationsCollection.insertOne(doc);
       res.send(result);
     });
 
