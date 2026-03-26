@@ -49,6 +49,30 @@ async function run() {
       res.send(result);
     });
 
+    //some applications read opreation
+    app.get('/applications', async (req, res) => {
+      const query = { applicant_email: req.query.email };
+      const cursor = applicationsCollection.find(query);
+      const result = await cursor.toArray();
+
+      // aggregate data
+      for (const item of result) {
+        console.log(item.job_id);
+        const queryAgain = { _id: new ObjectId(item.job_id) };
+        const resultAgain = await jobsCollection.findOne(queryAgain);
+
+        if (resultAgain) {
+          item.title = resultAgain.title;
+          item.company = resultAgain.company;
+          item.company_logo = resultAgain.company_logo;
+          item.location = resultAgain.location;
+          item.jobType = resultAgain.jobType;
+        }
+      }
+
+      res.send(result);
+    });
+
     //one application create opreation
     app.post('/applications', async (req, res) => {
       const doc = req.body;
