@@ -49,6 +49,15 @@ async function run() {
       res.send(result);
     });
 
+    // jobs create opreation
+    app.post('/jobs', async (req, res) => {
+      const doc = req.body;
+      const result = await jobsCollection.insertOne(doc);
+      res.send(result);
+    });
+
+    // ===========================================================
+
     //some applications read opreation
     app.get('/applications', async (req, res) => {
       const query = { applicant_email: req.query.email };
