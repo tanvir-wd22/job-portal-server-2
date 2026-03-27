@@ -35,9 +35,14 @@ async function run() {
     const applicationsCollection = database.collection('appsColl');
     //=====================================================
 
-    //all jobs read opreation
+    //all and some jobs read opreation
     app.get('/jobs', async (req, res) => {
-      const cursor = jobsCollection.find();
+      const email = req.query.email;
+      let query = {};
+      if (email) {
+        query = { hr_email: email };
+      }
+      const cursor = jobsCollection.find(query);
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -66,7 +71,7 @@ async function run() {
 
       // aggregate data
       for (const item of result) {
-        console.log(item.job_id);
+        // console.log(item.job_id);
         const queryAgain = { _id: new ObjectId(item.job_id) };
         const resultAgain = await jobsCollection.findOne(queryAgain);
 
